@@ -59,13 +59,13 @@ def local_simple_package_info(package):
 @app.route("/packages/<python_version>/<firstletter>/<package>/<filename>", methods=["GET"])
 @app.route("/packages/source/<firstletter>/<package>/<filename>", methods=["GET"])
 def get_file(package, filename, python_version=None, firstletter=None):
-    logging.debug("Request to get package with: {} {} {} {}".format(firstletter, package, filename, python_version))
+    logging.debug("Request to get package with: {a} {b} {c} {d}".format(a = firstletter, b = package, c = filename, d = python_version))
     try:
         response = make_response(app.config["cache"].get_file(package, filename, python_version=python_version))
         content_type, _ = mimetypes.guess_type(filename)
         if content_type is None and filename.endswith(".egg"):
             content_type = "application/zip"
-        logging.debug("Setting mime type of {!r} to {!r}".format(filename, content_type))
+        logging.debug("Setting mime type of {a!r} to {b!r}".format(a = filename, b = content_type))
         response.content_type = content_type
         return response
     except exceptions.NotFound:
@@ -99,7 +99,7 @@ def post_uploadpackage():
         return response
     filename = request.files["package"].filename
     package = re.match(r"(?P<package>.*?)-.*?\..*", filename).groupdict()["package"]
-    logging.debug("Parsed {!r} out of {!r}".format(package, filename))
+    logging.debug("Parsed {a!r} out of {b!r}".format(a = package, b = filename))
     app.config["package_store"].add_file(package, filename, request.files["package"].stream)
     return jsonify({"uploaded": "ok"})
 
